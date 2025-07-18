@@ -20,7 +20,7 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
-COPY --from=builder /app/.env ./
+# COPY --from=builder /app/.env ./
 
 EXPOSE 8000
 
