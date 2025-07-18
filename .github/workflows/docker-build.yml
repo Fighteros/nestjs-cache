@@ -1,0 +1,42 @@
+name: Build NestJS Docker Image (No Push)
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ✅ Checkout your repository
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      # ✅ Set up Docker Buildx for better cross-platform support
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # ✅ Build Docker image (without pushing it)
+      - name: Build Docker image locally
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false # 🚫 Do NOT push to registry
+          load: true # ✅ Load into Docker for testing/later use
+          tags: nestjs-backend:ci
+
+      - name: Save Docker image to tar
+        run: docker save nestjs-backend:ci -o nestjs-backend.tar
+
+      - name: Upload Docker image to GitHub Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: nestjs-backend.tar
+          path: nestjs-backend.tar
