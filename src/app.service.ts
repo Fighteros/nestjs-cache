@@ -7,15 +7,12 @@ export class AppService {
   // inject cache manager
   constructor(
     @Inject(CACHE_MANAGER)
-    private readonly cacheManager: Cache,
-  ) {}
+    private cacheManager: Cache) { }
 
   async getHello() {
-    await this.cacheManager.set('cached_item', { key: 32 });
-    const cachedData = await this.cacheManager.get('cached_item');
-    await this.cacheManager.del('cached_item');
-    console.log(await this.cacheManager.get('cached_item'));
-    console.log(cachedData);
-    return 'hello world';
+    await this.cacheManager.set('cached_item', { key: 32 }, 20);
+    const cachedItem = await this.cacheManager.get('cached_item');
+
+    return { key: cachedItem, message: 'Hello World' };
   }
 }

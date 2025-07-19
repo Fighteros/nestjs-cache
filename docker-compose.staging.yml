@@ -1,0 +1,30 @@
+services:
+  app:
+    container_name: nest_app_stage
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    environment:
+      - NODE_ENV=staging
+    env_file:
+      - .env.staging
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: pg_stage
+    restart: always
+    environment:
+      POSTGRES_DB: nest
+      POSTGRES_USER: nestuser
+      POSTGRES_PASSWORD: nestpass
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata_stage:/var/lib/postgresql/data
+
+volumes:
+  pgdata_stage:

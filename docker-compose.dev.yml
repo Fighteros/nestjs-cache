@@ -1,0 +1,41 @@
+services:
+  app:
+    container_name: nestjs_cache_dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: npm run start:dev
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env.dev
+    depends_on:
+      - postgres
+    networks:
+      - nestjs_net
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: pg_dev
+    restart: always
+    environment:
+      POSTGRES_DB: nest
+      POSTGRES_USER: nestuser
+      POSTGRES_PASSWORD: nest@pass123
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+    networks:
+      - nestjs_net
+
+volumes:
+  pgdata_dev:
+
+networks:
+  nestjs_net:
